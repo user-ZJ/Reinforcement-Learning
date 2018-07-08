@@ -65,7 +65,6 @@ class Runner(object):
         for e in range(training_epoch):
             accumulated_reward = 0
             run_time = 0
-            #print("training_epoch:",e)
             for i in range(training_per_epoch):
                 train_logger_before_act(e, i)
                 action, reward = self.robot.update()

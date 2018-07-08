@@ -100,7 +100,7 @@ class Robot(object):
         else:
             # TODO 6. Return random choose aciton
             act = np.random.choice(np.arange(self.nA),
-                                   p=get_probs(self.Qtable[self.state], self.epsilon, self.nA))
+                                   p=epsilon_greedy_probs(self.Qtable[self.state], self.epsilon, self.nA))
             return self.valid_actions[act]
 
     def update_Qtable(self, r, action, next_state):
@@ -113,7 +113,8 @@ class Robot(object):
             # to the given rules
             Qnt = self.Qtable[next_state]
             Qsa = self.Qtable[self.state][action]
-            maxQnt = self.Qtable[next_state][max(Qnt,key=Qnt.get)]
+            #maxQnt = self.Qtable[next_state][max(Qnt,key=Qnt.get)]
+            maxQnt = max(self.Qtable[next_state].values())
             self.Qtable[self.state][action] = Qsa + self.alpha*(r + (self.gamma * (maxQnt) - Qsa))
             #print(self.state,':',self.Qtable[self.state])
 
@@ -148,6 +149,8 @@ class Robot(object):
         return policy_s
 
 
+
+###testing code begin###
 '''mm = Maze(maze_size=(10,12),trap_number=6)
 robot = Robot(mm)
 robot.set_status(learning=True,testing=False)
@@ -167,3 +170,4 @@ r = Robot(g,alpha=alpha, epsilon0=epsilon0, gamma=gamma)
 r.set_status(learning=True)
 runner = Runner(r, g)
 runner.run_training(epoch, display_direction=True)'''
+###testing code end###
