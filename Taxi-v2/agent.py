@@ -24,7 +24,9 @@ class Agent:
         =======
         - action: an integer, compatible with the task's action space
         """
-        return np.random.choice(self.nA)
+        policy_s = self.epsilon_greedy_probs(self, self.Q[state], i_episode)
+
+        return np.random.choice(np.arange(self.nA), p=policy_s)
 
     def step(self, state, action, reward, next_state, done):
         """ Update the agent's knowledge, using the most recently sampled tuple.
@@ -38,3 +40,12 @@ class Agent:
         - done: whether the episode is complete (True or False)
         """
         self.Q[state][action] += 1
+
+    def epsilon_greedy_probs(self, Q_s, i_episode, eps=None):
+        """ obtains the action probabilities corresponding to epsilon-greedy policy """
+        epsilon = 1.0 / i_episode
+        if eps is not None:
+            epsilon = eps
+        policy_s = np.ones(env.nA) * epsilon / self.nA
+        policy_s[np.argmax(Q_s)] = 1 - epsilon + (epsilon / env.nA)
+        return policy_s
